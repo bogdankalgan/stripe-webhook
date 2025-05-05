@@ -1,0 +1,15 @@
+{
+  "name": "webhook",
+  "version": "1.0.0",
+  "main": "api/stripe-webhook.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "micro": "^10.0.1"
+  }
+}
