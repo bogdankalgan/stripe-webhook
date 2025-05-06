@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "micro": "^10.0.1",
     "stripe": "^18.1.0",
     "supabase": "^2.22.12"
