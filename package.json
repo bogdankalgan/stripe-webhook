@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "micro": "^10.0.1",
-    "stripe": "^18.1.0"
+    "stripe": "^18.1.0",
+    "supabase": "^2.22.12"
   }
 }
