@@ -48,9 +48,9 @@ export default async function handler(req, res) {
             delivery_method: "",
             deliver_datetime: '',
             comment:'',
-            delivery_address: address, email,
-            payment_intent: paymentIntent,
-            created_at: new Date(session.created * 1000),
+            payment_method: "card",
+            delivery_adress: address,
+            email
         }])
 
         if(error) {
