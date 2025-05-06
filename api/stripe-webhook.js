@@ -1,6 +1,6 @@
 const {buffer} = require('micro')
 const Stripe = require('stripe')
-const {createCliend} = require("@supabase/supabase-js")
+const {createClient} = require("@supabase/supabase-js")
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 const supabase = createCliend(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
