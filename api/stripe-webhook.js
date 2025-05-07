@@ -106,18 +106,18 @@ module.exports = async (req, res) => {
         const { error } = await supabase.from('orders').insert([
             {
                 set_name: 'Custom Set',
-                customer_name: customer.name || '',
-                phone: customer.phone || '',
+                customer_name: String(customer.name || ''),
+                phone: String(customer.phone || ''),
+                delivery_adress: String(`${address.city || ''}, ${address.line1 || ''}, ${address.postal_code || ''}`),
                 delivery_method: 'delivery',
                 delivery_datetime: new Date().toISOString(),
                 comment: '',
                 payment_method: 'card',
-                delivery_adress: `${address.city || ''}, ${address.line1 || ''}, ${address.postal_code || ''}`,
             },
         ]);
 
         if (error) {
-            console.error('Supabase insert error:', error);
+            console.error('Supabase insert error full:', JSON.stringify(error, null, 2));
             res.status(500).json({ error: error.message });
             return;
         }
