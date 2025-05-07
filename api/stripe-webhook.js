@@ -3,7 +3,7 @@ const Stripe = require('stripe')
 const {createClient} = require("@supabase/supabase-js")
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 module.exports.config = {
     api: {
