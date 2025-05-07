@@ -71,65 +71,63 @@ module.exports = async function handler(req, res) {
 }*/
 
 
-const {stripe} = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const {buffer} = require('micro')
-const {createClient} = require("@supabase/supabase-js")
+const { buffer } = require('micro');
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
 
-console.log("SUPABASE_KEY exists: ", Boolean(process.env.SUPABASE_KEY))
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 module.exports = async (req, res) => {
-    if(req.method !== 'POST') {
-        return res.status(405).send('Method not allowed')
+    if (req.method !== 'POST') {
+        res.status(405).send('Method Not Allowed');
+        return;
     }
 
-    const sig = req.headers['stripe-signature']
+    const sig = req.headers['stripe-signature'];
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
     let event;
+    const buf = await buffer(req);
 
-    const buf = await buffer(req)
-
-    try{
-        event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET)
-    } catch(error) {
-        console.error("Webhook signature verification failed. ", error)
-        return res.status(400).send(`Webhook Error: ${error.message}`)
+    try {
+        event = stripe.webhooks.constructEvent(buf, sig, endpointSecret);
+    } catch (err) {
+        console.error('Webhook Error:', err.message);
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
     }
 
-    if(event.type === 'checkout.session.completed') {
+    if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
+        const customer = session.customer_details || {};
+        const address = customer.address || {};
 
-        const adress = session.customer_details?.address
-        const fullAddress = adress ? `${adress.line1 || ""}, ${adress.city || ""}, ${adress.postal_code || ""}`: ''
+        const { error } = await supabase.from('orders').insert([
+            {
+                set_name: 'Custom Set',
+                customer_name: customer.name || '',
+                phone: customer.phone || '',
+                delivery_method: 'delivery',
+                delivery_datetime: new Date().toISOString(),
+                comment: '',
+                payment_method: 'card',
+                delivery_adress: `${address.city || ''}, ${address.line1 || ''}, ${address.postal_code || ''}`,
+            },
+        ]);
 
-        const dataToInsert = {
-            set_name: "custom set",
-            costomer_name: session.customer_details?.name || '',
-            phone: session.customer_details?.phone || '',
-            delivery_method: "доставка",
-            delivery_datetime: "",
-            comment: "",
-            payment_method: session.payment_method_types[0] || '',
-            delivery_adress: fullAddress || '',
-        }
-
-        try {
-            const {error} = await supabase.from('orders').insert([dataToInsert])
-
-            if(error) {
-                console.error("Supabase insert error: ", error.message)
-                return res.status(500).send(`Supabase insert failed: ${error.message}`)
-            }
-            return res.status(200).send('Order saved to Supabase')
-        } catch(error) {
-            console.error("Unexpected error: ", error.message)
-            return res.status(500).send(`error: ${error.message}`)
+        if (error) {
+            console.error('Supabase insert error:', error);
+            res.status(500).json({ error: error.message });
+            return;
         }
     }
-    return res.status(200).send('OK')
-}
+
+    res.status(200).json({ received: true });
+};
 
 module.exports.config = {
     api: {
-        bodyParser: false
-    }
-}
+        bodyParser: false,
+    },
+};
