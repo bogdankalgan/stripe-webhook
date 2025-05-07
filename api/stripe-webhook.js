@@ -75,6 +75,7 @@ const {stripe} = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const {buffer} = require('micro')
 const {createClient} = require("@supabase/supabase-js")
 
+console.log("SUPABASE_KEY exists: ", Boolean(process.env.SUPABASE_KEY))
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPBASE_KEY)
 
 module.exports = async (req, res) => {
