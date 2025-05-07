@@ -50,18 +50,18 @@ module.exports = async function handler(req, res) {
 
         const {error} = await supabase.from('orders').insert([{
             set_name: "Набор макарон",
-            customer_name: name,
-            phone: phone,
+            customer_name: name || '',
+            phone: phone || '',
             delivery_method: '',
             delivery_datetime: '',
             comment: '',
             payment_method: 'card online',
-            delivery_adress: adress,
-            email: email,
+            delivery_adress: adress || '',
+            email: email || '',
         }])
 
         if(error) {
-            console.error("Error: ", error)
+            console.error("Supabase insert error: ", JSON.stringify(error, null, 2))
             return res.status(500).send('DB insert failed')
         }
         console.log("Order saved to Supabase")
