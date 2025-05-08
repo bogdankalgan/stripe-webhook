@@ -106,13 +106,13 @@ module.exports = async (req, res) => {
         const { error } = await supabase.from('orders').insert([
             {
                 set_name: 'Custom Set',
-                customer_name: String(customer.name || ''),
+                /*customer_name: String(customer.name || ''),
                 phone: String(customer.phone || ''),
                 delivery_adress: String(`${address.city || ''}, ${address.line1 || ''}, ${address.postal_code || ''}`),
                 delivery_method: 'delivery',
                 delivery_datetime: new Date().toISOString(),
                 comment: '',
-                payment_method: 'card',
+                payment_method: 'card',*/
             },
         ]);
 
