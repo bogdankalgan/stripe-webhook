@@ -76,6 +76,8 @@ const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require('@supabase/supabase-js');
 
+console.log("Key presents: ", process.env.STRIPE_SECRET_KEY)
+
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 module.exports = async (req, res) => {
