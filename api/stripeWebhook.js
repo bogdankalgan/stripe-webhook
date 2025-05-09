@@ -38,13 +38,13 @@ module.exports = async (req, res) => {
 
         const insertData = {
             set_name: "Набор макарон с индивидуальным дизайном",
-            customer_name: customer.name || '',
-            phone: customer.phone || '',
+            customer_name: String(customer.name || ''),
+            phone: String(customer.phone || ''),
             delivery_method: "Доставка",
             delivery_datetime: '',
             comment: '',
             payment_method: "online by card",
-            delivery_adress: fullAdress,
+            delivery_adress: String(fullAdress),
         }
 
         const {error} = await supabase.from('orders').insert([insertData]);
