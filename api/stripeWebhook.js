@@ -48,7 +48,8 @@ module.exports = async (req, res) => {
         }*/
 
         const {error} = await supabase.from('orders').insert([{
-            set_name: "Проверка из stripe"
+            set_name: "Проверка из stripe",
+            customer_name: "тестовый пидорас"
         }]);
 
         if(error) {
