@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
         const adress = customer.address || {};
         const fullAdress = `${adress.line1 || ''}, ${adress.city || ''}, ${adress.postal_code || ''}`;
 
-        const insertData = {
+       /* const insertData = {
             set_name: "Набор макарон с индивидуальным дизайном",
             customer_name: String(customer.name || ''),
             phone: String(customer.phone || ''),
@@ -45,9 +45,11 @@ module.exports = async (req, res) => {
             comment: '',
             payment_method: "online by card",
             delivery_adress: String(fullAdress),
-        }
+        }*/
 
-        const {error} = await supabase.from('orders').insert([insertData]);
+        const {error} = await supabase.from('orders').insert([{
+            set_name: "Проверка из stripe"
+        }]);
 
         if(error) {
             console.error("Error inserting data to supabase", error);
